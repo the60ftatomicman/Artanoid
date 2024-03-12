@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 100 100" fill="none">
+<style>
+</style>
+<rect width="100" height="100" fill="#000000"/>
+<g id="grid">
+<path d="M 50 10 l 40 40 l -40 40 l -40 -40 l 40 -40 Z" stroke="blue"/>
+<!-- right facing -->
+<path d="M 10 50 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 15 45 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 20 40 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 25 35 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 30 30 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 35 25 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 40 20 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 45 15 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 50 10 c 13 6, 16 20, 20 20 c 13 6, 21 18, 20 20 M 0 0 Z" stroke="lightgreen"/>
+  <!-- left facing -->
+<path d="M 90 50 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 85 45 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 80 40 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 75 35 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 70 30 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 65 25 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 60 20 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 55 15 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+<path d="M 50 10 c -13 6,-16 20,-20 20 c -13 6, -21 18, -20 20 M 0 0 Z" stroke="lightgreen"/>
+</g>
+<g id="doh">
+  <g id="fills" fill="rgba(255,0,0,0.7)">
+    <path d="M33 80 
+    c 0 0, 0 0, -4 -4 
+    c 0 0, 0 0, 1 -20
+    l -2 -2
+    v -10
+    l 2 -2
+    v -20
+    c 10 -5, 30 -5, 40 0
+    v 20
+    l 2 2
+    v 10
+    l -2 2
+    c 0 0, 0 0, 1 20
+    c 0 0, 0 0, -4 4
+    c -15 3, -20 3, -34 0
+    m0 0Z"/>
+   <path d="M 25 90 
+      c 1 0   , 2 -9  , 9 -10
+      c 15 3  , 20 3  , 34 0
+      c 0 -1  , 9 2   , 9 10
+      c -22 3 , -31 3 ,-52 0
+      m 0 0Z" 
+      />
+    </g>
+  <g id="doh_base"  stroke="rgba(255,0,0,1)" stroke-width="0.25">
+
+    <!-- horizontal lines   44% and 58% on curve points -->
+    <path d="M 27 87 c 22 3,28 3, 49 0 m 0 0Z"/>
+    <path d="M 29 83 c 20 3,26 3, 45 0 m 0 0Z"/>
+    <!-- vertical -->
+    <path d="M 30 91 c  1 -3, 2 -8, 7 -10 m 0 0Z"/>
+    <path d="M 37 91 c  1 -3, 2 -7, 6 -10 m 0 0Z"/>
+    <path d="M 44 92 c  1 -3, 2 -8, 5 -10 m 0 0Z"/>
+    <path d="M 57 92 c -1 -3,-2 -8,-5 -10 m 0 0Z"/>
+    <path d="M 65 91 c -1 -3,-2 -7,-6 -10 m 0 0Z"/>
+    <path d="M 72 91 c -1 -3,-2 -8,-7 -10 m 0 0Z"/>
+    <!-- outline arc -->
+    <path d="M 25 90 
+      c 1 0   , 2 -9  , 9 -10
+      c 15 3  , 20 3  , 34 0
+      c 0 -1  , 9 2   , 9 10
+      c -22 3 , -31 3 ,-52 0
+      m 0 0Z" 
+       stroke-width="1" />
+  </g>
+  <g id="doh_lower_head" stroke="rgba(255,0,0,1)" stroke-width="0.25">
+    <!-- horizontal lines   44% and 58% on curve points -->
+    <path d="M 31 78 c 3 3, 35 3, 38 0 m 0 0Z" />
+    <path d="M 30 77 c 6 2, 34 2, 40 0 m 0 0Z" />
+    <path d="M 29 75 c 10 1,32 1, 42 0 m 0 0Z" />
+    <path d="M 29 70 c 10 1,32 1, 42 0 m 0 0Z" />
+    <path d="M 29 66 c 10 0,32 0, 42 0 m 0 0Z" />
+    <path d="M 30 62 c 10 0,32 0, 40 0 m 0 0Z" />
+    <!-- vertical -->
+    <path d="M 37 81 c -3 -5, -5 0, -4 -23 m 0 0Z"/>
+    <path d="M 42 82 c -3 -5, -3 0, -4 -23 m 0 0Z"/>
+    <path d="M 48 82 c -3 -5, -2 0, -3 -22 m 0 0Z"/>
+    <path d="M 52 82 c 3 -5, 2 0, 3 -22 m 0 0Z"/>
+    <path d="M 60 82 c 1 -5, 3 0, 2 -24 m 0 0Z"/>
+    <path d="M 65 81 c 1 -5, 3 0, 2 -22 m 0 0Z"/>
+  </g>
+  <g id="doh_mouth" stroke="rgba(255,0,0,1)" stroke-width="0.5">
+      <path d="M 41 58
+      c 4 -4,4 -7,4 -6
+      m 11 0
+      c 0 2,-4 -3,4 6
+      m 0 0Z" />
+    <path d="M 46 60
+      c -2 0,-4 -1, -5 -2
+      m 19 0
+      c 0 2,-4 2, -5 2
+      m 0 0Z" />
+    <path d="M 41 58
+      c 0 -1,16 -1, 19 0
+      m 0 0Z" stroke-width="1.0"/>
+  </g>
+  <g id="doh_checks" stroke-width="0.25">
+    <path d="M 30 56 
+      c 4 4, 10 3, 11 0
+      m 18 0
+      c 4 3, 10 4, 11 0
+      l 2 -2
+      v -10
+      l -2 -2
+      m -40 0
+      l -2 2
+      v 10
+      l 2 2
+      m 0 0Z" stroke="rgba(255,0,0,1)" stroke-width="1.0"/>
+    <path d="M 28 45 c 5 -2, 13 -2, 18 -1 m 7 0 c 5 -1, 13 -1, 19 2 m 0 0ZZ"  stroke="blue"/>
+    <path d="M 28 48 c 5 -2, 13 -2, 18 -1 m 7 0 c 5 -1, 13 -1, 19 2 m 0 0ZZ"  stroke="blue"/>
+    <path d="M 28 51 c 5 1, 13 1, 18 -1 m 7 0 c 5 1, 13 1, 19 0 m 0 0ZZ"  stroke="blue"/>
+  </g>
+  <g id="doh_eyes">
+    <path d="M 30 42
+      c 6 -1, 12 -1, 18 -1
+      c -1 0, 0 0, 0 -4
+      c 0 -1, 4 -1, 4 0 
+      c 0 0, -1 0, 0 4 
+      c 0 0, 12 0, 18 1
+      v -2
+      c -2 -10, -38 -10, -40 0
+      v 2
+      m 0 0Z" fill="rgba(50,0,0,1.0)" stroke="rgba(255,0,0,1)"/>
+  </g>
+  <g id="doh_nose">
+    <path d="M 44 53
+      c 4 -2,7 -2,12 0
+      c 3 -1,2 -2,1 -4
+      c -3 -4,-11 -4,-14 0
+      c 0 1,-3 3,1 4
+      m 0 0Z" fill="rgba(50,0,0,1.0)" stroke="rgba(255,0,0,1)"/>
+    <path d="M 48 37
+      c 0 9,-10 15,-4 16
+      c 4 -2,7 -2 ,12 0
+      c 6 -3,-4 -4,-4 -16
+      c -0 -1,-4 -1,-4 0
+      m 0 0Z" stroke="rgba(255,0,0,1)"/>
+
+  </g>
+  <path d="M33 80 
+    c 0 0, 0 0, -4 -4 
+    c 0 0, 0 0, 1 -20
+    l -2 -2
+    v -10
+    l 2 -2
+    v -20
+    c 10 -5, 30 -5, 40 0
+    v 20
+    l 2 2
+    v 10
+    l -2 2
+    c 0 0, 0 0, 1 20
+    c 0 0, 0 0, -4 4
+    c -15 3, -20 3, -34 0
+    m0 0Z" stroke="rgba(255,0,0,1)"/>
+</g>
+</svg>

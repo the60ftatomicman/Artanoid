@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <style>
+            body{background-color: purple;}
+        #editor{
+            min-width: 351px;
+            min-height: 289px;
+            white-space: nowrap;
+            tr{display: block;}
+            td{
+                width:   26px;
+                height:  16px;
+                display: inline-block;
+                border:  1px solid rgba(0,0,0,0.3);
+            }
+        }
+        #info{
+        }
+        </style>
+    </head>
+    <body>
+        <table id="editor"></table>
+        <input type="radio" id="add" name="action" value="add" checked="checked">
+        <label for="add">Add Blocks</label>
+        <input type="radio" id="remove" name="action" value="remove">
+        <label for="remove">Remove Blocks</label>
+        <hr/>
+        <div id="info">
+            Block Selector:
+            <select id="blocks"></select>
+            Block Attributes:
+            <input type="radio" id="static" name="attributes" value="static" checked="checked">
+            <label for="static">Static</label>
+            <input type="radio" id="move" name="attributes" value="move">
+            <label for="moveable">Moves</label>
+            <br/>
+            <br/>
+            <!-- Looks Like: <div id="current"></div> -->
+            <hr/>
+            <textarea id="output">
+            </textarea>
+        </div>
+    </body>
+    <script>
+        var currentGame = "revenge";
+        //https://strategywiki.org/wiki/Arkanoid:_Revenge_of_Doh/Walkthrough
+        var GAME={
+            "arkanoid":{COLS:13,ROWS:17},
+            "revenge" :{COLS:13,ROWS:17,
+                BLOCKS:{
+                    shadow:         {pattern:"shadow" ,code:{static:"",move:""}    ,fill:"rgb(0,0,0)"      },
+                    white_flat:     {pattern:"flat"   ,code:{static:"01",move:""}  ,fill:"rgb(242,242,242)"},
+                    red_flat:       {pattern:"flat"   ,code:{static:"21",move:""}  ,fill:"rgb(240,0,0)"    },
+                    pink_flat:      {pattern:"flat"   ,code:{static:"31",move:""}  ,fill:"rgb(242,80,226)" },
+                    orange_flat:    {pattern:"flat"   ,code:{static:"09",move:""}  ,fill:"rgb(242,145,0)"  },
+                    yellow_flat:    {pattern:"flat"   ,code:{static:"39",move:""}  ,fill:"rgb(242,242,0)"  },
+                    green_flat:     {pattern:"flat"   ,code:{static:"19",move:""}  ,fill:"rgb(0,242,0)"    },
+                    turqouise_flat: {pattern:"flat"   ,code:{static:"11",move:""}  ,fill:"rgb(0,242,242)"  },
+                    blue_flat:      {pattern:"flat"   ,code:{static:"29",move:""}  ,fill:"rgb(0,144,242)"  },
+                    grey_1ridge:    {pattern:"1ridge" ,code:{static:"03",move:""}  ,fill:"rgb(176,176,208)",highlight:"rgb(192,192,224)",shadow:"rgb(112,112,144)"},
+                    gold_1ridge:    {pattern:"1ridge" ,code:{static:"83",move:""}  ,fill:"rgb(240,192,0)"  ,highlight:"rgb(240,224,0)"  ,shadow:"rgb(160,128,0)"  },
+                    grey_2ridge:    {pattern:"2ridge" ,code:{static:"53",move:""}  ,fill:"rgb(176,176,208)",highlight:"rgb(192,192,224)",shadow:"rgb(112,112,144)"}
+                }
+            }
+        }
+        for(let i=0;i<Object.keys(GAME[currentGame].BLOCKS).length;i++){
+            if(i>0){
+                let opt = document.createElement("option");
+                opt.text=Object.keys(GAME[currentGame].BLOCKS)[i];
+                opt.value=Object.keys(GAME[currentGame].BLOCKS)[i];
+                document.getElementById("blocks").append(opt);
+            }
+        }
+
+
+        for(let r=0;r<GAME[currentGame].ROWS;r++){
+            let row = document.createElement("tr");
+            row.id="r"+r;
+            for(let c=0;c<GAME[currentGame].COLS;c++){
+                let col = document.createElement("td");
+                col.id = row.id+";c"+c;
+                col.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="18" viewBox="0 0 28 18" fill="none" data-block="00"></svg>';
+                col.onclick = function(){
+                    if(document.getElementById("add").checked){
+                        let blockTemplate = GAME[currentGame].BLOCKS[document.getElementById("blocks").value];
+                        let svgPath = getFlatPath(blockTemplate);
+                        if(blockTemplate.pattern == "1ridge"){
+                            svgPath = get1Ridge(blockTemplate);
+                        }else if(blockTemplate.pattern == "2ridge"){
+                            svgPath = get2Ridge(blockTemplate);
+                        }
+                        document.getElementById(col.id).innerHTML = 
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="18" viewBox="0 0 28 18" fill="none" data-block="'+blockTemplate.code.static+'">' +
+                        '<rect width="28" height="18" fill="'+GAME[currentGame].BLOCKS.shadow.fill+'"/>' + svgPath +
+                        '</svg>';
+                       
+                    }else{
+                        document.getElementById(col.id).innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="18" viewBox="0 0 28 18" fill="none" data-block="00"></svg>';
+                    }
+                    getCodes();
+                }
+                row.append(col);
+            }
+            document.getElementById("editor").append(row);
+        }
+        
+        getCodes();
+
+        function getCodes(){
+            let output = document.getElementById("output");
+            output.textContent = "";
+            //Arkanoid goes topright to bottomleft
+            for(let r=0;r<GAME[currentGame].ROWS;r++){
+                for(let c=GAME[currentGame].COLS-1;c>=0;c--){
+                    let block = document.getElementById("r"+r+";c"+c).getElementsByTagName("svg")[0];
+                    let code = block.dataset.block;
+                    output.textContent += code;
+					output.textContent += c==0 ? ";\r\n":",";
+                }
+            }
+        }
+        function getFlatPath(blockData){
+            return '<rect width="25" height="15" fill="'+blockData.fill+'"/>';
+        }
+        function get1Ridge(blockData){
+            return  '<rect width="25" height="15" fill="'+blockData.fill+'"/>'+
+                    '<path d="M 0 0,l 5 7,h 15,v 1, h-15, l -5 7z" fill="'+blockData.highlight+'" />'+
+                    '<path d="M 25 0,l -5 7,v 1, l 5 7z" fill="'+blockData.shadow+'" />';
+        }
+        function get2Ridge(blockData){
+        return  '<rect width="25" height="15" fill="'+blockData.fill+'"/>'+
+            '<path d="M 6 7,l -5 -5,v 1,l 5 5 M 1z" fill="rgb(255,255,255)" />'+
+            '<path d="M 6 7,l 5 -5,v 10 l -5 -4z" fill="'+blockData.shadow+'"/>'+
+            '<path d="M 6 7,l 5 5,h -10" fill="'+blockData.highlight+'" />' +
+            '<path d="M 18 7,l -5 -5,v 1,l 5 5 M 1z" fill="rgb(255,255,255)" />'+
+            '<path d="M 18 7,l 5 -5,v 10 l -5 -4z" fill="'+blockData.shadow+'"/>'+
+            '<path d="M 18 7,l 5 5,h -10" fill="'+blockData.highlight+'" />';
+        }
+    </script>
+</html>
