@@ -38,6 +38,20 @@ In short, you draw with the tool. The tool writes all the annoying hex values wh
 3) run the rom **from the command line!**
    I've only been able to get this to run on an older version of mame...heads up!
 
+# TODOS
+* Refactor and make a class or two. Eeesh right?
+* Add better instructions in application
+* Add level select (currently just modifies level 1)
+* Finish mapping and Add locations for Arkanoid 1
+* Finish and add instructions filewise for Arkanoid 1
+* Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations
+* Add load from ROM
+* Add Save to String -- for sharing!
+* Add Load from String -- for sharing!
+* Add flags for moveable blocks
+* Research how backgrounds work for both games, can they change?
+* Add MAME launcher in python project? Might be nice....
+
 # Some shortcuts
 * For windows users, I have a bat script I use to do my copy and pasting from the repo to my MAME roms. I also launch my game this way. IT WILL SAVE TIME.
  * ```xopy "/path/to/data/in/this/repo" "/path/to/mame/rom/folder/nowfilenamehere.extension"```
