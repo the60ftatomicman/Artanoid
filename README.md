@@ -54,7 +54,7 @@ In short, you draw with the tool. The tool writes all the annoying hex values wh
 
 # Some shortcuts
 * For windows users, I have a bat script I use to do my copy and pasting from the repo to my MAME roms. I also launch my game this way. IT WILL SAVE TIME.
- * ```xopy "/path/to/data/in/this/repo" "/path/to/mame/rom/folder/nowfilenamehere.extension"```
+ * ```xcopy "/path/to/data/in/this/repo" "/path/to/mame/rom/folder/nowfilenamehere.extension"```
  * ```./mame64 arkanoid2``` run without debug mode
  * ```./mame64 arkanoid2 --debug``` run WITH debug mode if you want to use the memory assembler to see your changes
 
