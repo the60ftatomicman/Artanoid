@@ -6,7 +6,7 @@
 # ---------- Imports
 # ----- Internal Libs
 import math
-from os import scandir,mkdir,remove,path
+from os import path
 import tkinter as tk
 # ---------- TODOS
 # TODO: Add controls for font selection and size
@@ -28,10 +28,12 @@ blnSaving      = False
 lstBrickData   = []
 strCurrentGame  = tk.StringVar()
 strCurrentBlock = tk.StringVar()
+strCurrentLevel = tk.StringVar()
 GAME_DATA = {
     "arkanoid":{
-        "ROWS":17,
+        "ROWS":18,
         "COLS":13,
+        "ROM":"b08_13.3e",
         "BLOCKS":{
             "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
             "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{242:02x}{242:02x}{242:02x}']},
@@ -46,9 +48,10 @@ GAME_DATA = {
         },
         "LEVELS":{}
     },
-    "arkanoid:revengeofdoh":{
-        "ROWS":17,
+    "arkanoidrevengeofdoh":{
+        "ROWS":18,
         "COLS":13,
+        "ROM":"b08_13.3e",
         "BLOCKS":{
             "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
             "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{242:02x}{242:02x}{242:02x}']},
@@ -64,7 +67,9 @@ GAME_DATA = {
             "grey_2ridge"    : {"CODES":{"static":"53"},"COLORS":[f'#{176:02x}{176:02x}{208:02x}',f'#{192:02x}{192:02x}{224:02x}',f'#{112:02x}{112:02x}{144:02x}']}
         },
         "LEVELS":{
-            "1":0x593E
+            "1":0x593E,
+            "2R":0x6676,
+            "2L":0x68AA
         }
     }
 }
@@ -77,21 +82,30 @@ frmPaddingRight= tk.Frame(window,width=20)
 frmDisplay   = tk.Frame(window)
 
 # - Canvas
-cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(26*13),height=(17*16))
+cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(26*13),height=(18*16))
 cnvDisplay.pack()
 # - Game Select Control
-lblGameSelect = tk.Label(frmControls,text="GAME:")
+lblGameSelect = tk.Label(frmControls,text="Game:")
 lblGameSelect.grid(row=0, column=0)
+
 def refreshKeys():
-    global txtBlockSelect
+    global txtBlockSelect,txtLevelSelect
+    tempList = list(GAME_DATA[strCurrentGame.get()]["LEVELS"].keys())
+    txtLevelSelect.config(values=tempList)
     tempList = list(GAME_DATA[strCurrentGame.get()]["BLOCKS"].keys())
     tempList.remove("clear")
     txtBlockSelect.config(values=tempList)
     initBrickData()
     drawBricks()
-strCurrentGame.set("arkanoid:revengeofdoh")
-txtGameSelect = tk.Spinbox(frmControls,textvariable=strCurrentGame,values=["arkanoid","arkanoid:revengeofdoh"],state='readonly',command=refreshKeys)
+
+txtGameSelect = tk.Spinbox(frmControls,textvariable=strCurrentGame,values=["arkanoidrevengeofdoh","arkanoid"],state='readonly',command=refreshKeys)
 txtGameSelect.grid(row=0, column=1)
+# -- Level Select
+lblLevelSelect = tk.Label(frmControls,text="Level:")
+lblLevelSelect.grid(row=0, column=2)
+tempList = list(GAME_DATA[strCurrentGame.get()]["LEVELS"].keys())
+txtLevelSelect = tk.Spinbox(frmControls,textvariable=strCurrentLevel,values=tempList,state='readonly')
+txtLevelSelect.grid(row=0, column=3)
 # - Block Select Control
 lblBlockSelect = tk.Label(frmControls,text="Block:")
 lblBlockSelect.grid(row=1, column=0)
@@ -101,7 +115,10 @@ txtBlockSelect = tk.Spinbox(frmControls,textvariable=strCurrentBlock,values=temp
 txtBlockSelect.grid(row=1, column=1)
 # - Save Button
 btnSave = tk.Button(frmControls, text='Save')
-btnSave.grid(row=2, column=1,columnspan=3)
+btnSave.grid(row=1, column=2,columnspan=2)
+#-- Instructions
+lblInstructions = tk.Label(frmControls,text="Left click places block. Right click removes blocks")
+lblInstructions.grid(row=3, column=0,columnspan=4)
 # -- build it all together
 frmHeader.grid(row=0,column=0,columnspan=3)
 frmPaddingLeft.grid(row=1,column=0)
@@ -126,13 +143,16 @@ def rightMouseEvent(event):
 cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
 # ---------- Methods
 def saveData():
-    global GAME_DATA,strCurrentGame,lstBrickData
+    global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
     content = []
+    lvlDataRom = dirData+"\\"+strCurrentGame.get()+"\\"+GAME_DATA[strCurrentGame.get()]["ROM"]
+    if path.exists(lvlDataRom+".new"):
+        lvlDataRom = lvlDataRom+".new"
     with open(lvlDataRom, "rb") as fr:
         data = fr.read(1)
         content=data
         idx=0
-        lvlStart=int(0x593E)-1
+        lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
         while data:
             data = fr.read(1)
             if idx == int(0x0A99)-1:
@@ -158,11 +178,14 @@ def saveData():
                 content+=data
             idx+=1
     print("done reading")
-    with open(lvlDataRom+".new", "wb") as fw:
-        fw.write(content)
+    if ".new" not in lvlDataRom: 
+        with open(lvlDataRom+".new", "wb") as fw:
+            fw.write(content)
+    else:
+        with open(lvlDataRom, "wb") as fw:
+            fw.write(content)
     print("done writing")
    
-
 def setBrickData(row,col,color):
     global lstBrickData
     lstBrickData[(row*GAME_DATA[strCurrentGame.get()]["COLS"])+col] = color
