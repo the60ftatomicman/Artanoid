@@ -33,7 +33,7 @@ GAME_DATA = {
     "arkanoid":{
         "ROWS":18,
         "COLS":13,
-        "ROM":"b08_13.3e",
+        "ROM":"",
         "BLOCKS":{
             "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
             "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{242:02x}{242:02x}{242:02x}']},
@@ -44,9 +44,18 @@ GAME_DATA = {
             "green_flat"     : {"CODES":{"static":"19"},"COLORS":[f'#{0:02x}{242:02x}{0:02x}']},
             "turqouise_flat" : {"CODES":{"static":"11"},"COLORS":[f'#{0:02x}{242:02x}{242:02x}']},
             "blue_flat"      : {"CODES":{"static":"29"},"COLORS":[f'#{0:02x}{144:02x}{242:02x}']},
-            "grey_1ridge"    : {"CODES":{"static":"03"},"COLORS":[f'#{176:02x}{176:02x}{208:02x}',f'#{192:02x}{192:02x}{224:02x}',f'#{112:02x}{112:02x}{144:02x}']}
+            "grey_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{157:02x}{157:02x}{157:02x}']},
+            "gold_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{188:02x}{174:02x}{0:02x}']}
         },
-        "LEVELS":{}
+        "LEVELS":{
+            "1":0xBF15,"2":0x0138,"3":0xBE2B,"4":0x04CB,"5":0x0FE0,
+            "6":0x14D8,"7":0x16C1,"8":0x1F46,"9":0x22CE,"10":0x2980,
+            "11":0x0A08,"12":0x3460,"13":0x40F6,"14":0x41E0,"15":0x4DEC,
+            "16":0x502E,"17":0x547A,"18":0x5BAF,"19":0x5CB1,"20":0x5D9B,
+            "21":0x64E8,"22":0x6698,"23":0x6829,"24":0x73F3,"25":0x74DD,
+            "26":0x75C8,"27":0x7D9E,"28":0x7F88,"29":0x870E,"30":0x8FAE,
+            "31":0x9098,"32":0x9CF0
+        }
     },
     "arkanoidrevengeofdoh":{
         "ROWS":18,
@@ -67,9 +76,8 @@ GAME_DATA = {
             "grey_2ridge"    : {"CODES":{"static":"53"},"COLORS":[f'#{176:02x}{176:02x}{208:02x}',f'#{192:02x}{192:02x}{224:02x}',f'#{112:02x}{112:02x}{144:02x}']}
         },
         "LEVELS":{
-            "1":0x593E,
-            "2R":0x6676,
-            "2L":0x68AA
+            "1":0x593E,"2R":0x6676,"2L":0x68AA,"3R":0x5C8C,"3L":0x5DA6,
+            "4R":0x620E,"4L":0x9D8A,"5R":0x93A0,"5L":0x6328,"6R":0x9C70,"6L":0x6E2C
         }
     }
 }
