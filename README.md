@@ -40,15 +40,15 @@ In short, you draw with the tool. The tool writes all the annoying hex values wh
 
 # TODOS
 * Refactor and make a class or two. Eeesh right?
-* Add better instructions in application
-* Add level select (currently just modifies level 1)
-* Finish mapping and Add locations for Arkanoid 1
+* ~~ ~~Add better instructions in application~~ ~~ (3/13/2024)
+* ~~ ~~Add level select (currently just modifies level 1)~~ ~~ (3/13/2024)
+* ~~ ~~Finish mapping and Add locations for Arkanoid 1~~ ~~ (3/13/2024)
 * Finish and add instructions filewise for Arkanoid 1
 * Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations
 * Add load from ROM
 * Add Save to String -- for sharing!
 * Add Load from String -- for sharing!
-* Add flags for moveable blocks
+* Add flags for moveable blocks (Revenge of Doh only)
 * Research how backgrounds work for both games, can they change?
 * Add MAME launcher in python project? Might be nice....
 
