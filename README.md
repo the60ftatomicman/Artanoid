@@ -7,13 +7,13 @@ If provided the proper ROM file, this tool will generate new ROM files to overwr
 Block data will be applied AS WELL AS the necessary hacks to jump past ROM checks which are necessary to play any modifications to these games in MAME or on a real machine.
 In short, you draw with the tool. The tool writes all the annoying hex values where they need to go for the block data AND rom checks.
 
-# Requirements (as of 3/12/2024)
+# Requirements (as of 3/13/2024)
 * Runs on **Python 3.10.11***
   * Uses **tkinter** library as the UI ```pip install tk```
 * You'll need a ROM copy of Arkanoid and Arkanoid: Revenge of Doh (World Edition)
   * Both are not needed! Just the ones necessary for the game you want to edit.
-
-# Setup (as of 3/12/2024)
+----
+# Setup (as of 3/13/2024)
 ## Preparing your MAME folder
 1) Start by **backing up** then **unzip** the arkanoid roms into the ROM directory for your MAME emulator
 2) **Rename the backup ZIP roms**, otherwise you will not be saving changes!
@@ -37,6 +37,9 @@ In short, you draw with the tool. The tool writes all the annoying hex values wh
 2) Rename the old file (ex:**b08_13.3e.old**), replace it with the new file (so just remove the .new)
 3) run the rom **from the command line!**
    I've only been able to get this to run on an older version of mame...heads up!
+----
+# Features Working
+* Revenge of Doh you can edit any level (17 and 34 are bosses so they are uneditable) with basic blocks.
 
 # TODOS
 * Refactor and make a class or two. Eeesh right?
