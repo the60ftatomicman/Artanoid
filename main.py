@@ -17,6 +17,7 @@ import blocks
 #TODO: Handle writing across the 2 memory banks for the OG arkanoid. < 8000 gets ic17 otherwise use ic16.
 #0x0000-0x7FFF	32768	a75-19.ic17	CRC(d3ad37d7) (Fluke: 4189)
 #0x8000-0xFFFF	32768	a75-18.ic16	CRC(cdc08301) (Fluke: E951)
+# -- to find address simply remove 0x8000 from anything on ic16! (aka anything greater than 0x8000 for address)
 window = tk.Tk()
 window.geometry("391x600")
 window.title("Artanoid")
@@ -157,7 +158,38 @@ def rightMouseEvent(event):
     print("erased Row: " +str(coords["row"])+" Col: "+str(coords["col"]))
     setBrickData(coords["row"],coords["col"],"clear")
 # ---------- Methods
+# TODO this is hot garbage and needs to be updated into a handler class
 def saveData():
+    if strCurrentGame.get() == "arkanoidrevengeofdoh":
+        saveDataRevengeOfDoh()
+    elif strCurrentGame.get() == "arkanoid":
+        saveDataArkanoid()
+        
+def saveDataArkanoid():
+    global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
+    content = []
+    lvlDataRom = dirData+"\\"+strCurrentGame.get()+"\\"+GAME_DATA[strCurrentGame.get()]["ROM"]
+    if path.exists(lvlDataRom+".new"):
+        lvlDataRom = lvlDataRom+".new"
+    with open(lvlDataRom, "rb") as fr:
+        data = fr.read(1)
+        content=data
+        idx=0
+        lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
+        while data:
+            data = fr.read(1)
+            content+=data
+            idx+=1
+    print("done reading")
+    if ".new" not in lvlDataRom: 
+        with open(lvlDataRom+".new", "wb") as fw:
+            fw.write(content)
+    else:
+        with open(lvlDataRom, "wb") as fw:
+            fw.write(content)
+    print("done writing")
+
+def saveDataRevengeOfDoh():
     global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
     content = []
     lvlDataRom = dirData+"\\"+strCurrentGame.get()+"\\"+GAME_DATA[strCurrentGame.get()]["ROM"]
