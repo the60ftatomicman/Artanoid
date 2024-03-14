@@ -7,7 +7,10 @@
 # ----- Internal Libs
 import math
 from os import path
+# ----- External Libs
 import tkinter as tk
+# ----- User Generated Libs
+import blocks
 # ---------- TODOS
 #TODO: Classes and making this less...rigid.
 #TODO: Revenge of DOH has movable blocks. lets add a radio button for those
@@ -34,17 +37,17 @@ GAME_DATA = {
         "ROM":"",
         "CHECKSUM":{"location":None,"override":None},
         "BLOCKS":{
-            "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
-            "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{255:02x}{255:02x}{255:02x}']},
-            "red_flat"       : {"CODES":{"static":"12"},"COLORS":[f'#{255:02x}{0:02x}{0:02x}']},
-            "pink_flat"      : {"CODES":{"static":"19"},"COLORS":[f'#{255:02x}{0:02x}{255:02x}']},
-            "orange_flat"    : {"CODES":{"static":"05"},"COLORS":[f'#{255:02x}{143:02x}{0:02x}']},
-            "yellow_flat"    : {"CODES":{"static":"1D"},"COLORS":[f'#{255:02x}{255:02x}{0:02x}']},
-            "green_flat"     : {"CODES":{"static":"0E"},"COLORS":[f'#{0:02x}{255:02x}{0:02x}']},
-            "turqouise_flat" : {"CODES":{"static":"0A"},"COLORS":[f'#{0:02x}{255:02x}{255:02x}']},
-            "blue_flat"      : {"CODES":{"static":"16"},"COLORS":[f'#{0:02x}{112:02x}{255:02x}']},
-            "grey_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{157:02x}{157:02x}{157:02x}']},
-            "gold_flat"      : {"CODES":{"static":"FF"},"COLORS":[f'#{188:02x}{174:02x}{0:02x}']}
+            "clear"          : blocks.Clear(),
+            "white_flat"     : blocks.White_Flat(),
+            "red_flat"       : blocks.Red_Flat(),
+            "pink_flat"      : blocks.Pink_Flat(),
+            "orange_flat"    : blocks.Orange_Flat(),
+            "yellow_flat"    : blocks.Yellow_Flat(),
+            "green_flat"     : blocks.Green_Flat(),
+            "turqouise_flat" : blocks.Turqouise_Flat(),
+            "blue_flat"      : blocks.Blue_Flat(),
+            "grey_flat"      : blocks.Grey_Flat(),
+            "gold_flat"      : blocks.Gold_Flat(),
         },
         "LEVELS":{
             "1":0xBF15,"2":0x0138,"3":0xBE2B,"4":0x04CB,"5":0x0FE0,
@@ -63,18 +66,18 @@ GAME_DATA = {
         "ROM":"b08_13.3e",
         "CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
         "BLOCKS":{
-            "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
-            "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{242:02x}{242:02x}{242:02x}']},
-            "red_flat"       : {"CODES":{"static":"21"},"COLORS":[f'#{242:02x}{0:02x}{0:02x}']},
-            "pink_flat"      : {"CODES":{"static":"31"},"COLORS":[f'#{242:02x}{80:02x}{226:02x}']},
-            "orange_flat"    : {"CODES":{"static":"09"},"COLORS":[f'#{242:02x}{145:02x}{0:02x}']},
-            "yellow_flat"    : {"CODES":{"static":"39"},"COLORS":[f'#{242:02x}{242:02x}{0:02x}']},
-            "green_flat"     : {"CODES":{"static":"19"},"COLORS":[f'#{0:02x}{242:02x}{0:02x}']},
-            "turqouise_flat" : {"CODES":{"static":"11"},"COLORS":[f'#{0:02x}{242:02x}{242:02x}']},
-            "blue_flat"      : {"CODES":{"static":"29"},"COLORS":[f'#{0:02x}{144:02x}{242:02x}']},
-            "grey_1ridge"    : {"CODES":{"static":"03"},"COLORS":[f'#{176:02x}{176:02x}{208:02x}',f'#{192:02x}{192:02x}{224:02x}',f'#{112:02x}{112:02x}{144:02x}']},
-            "gold_1ridge"    : {"CODES":{"static":"83"},"COLORS":[f'#{240:02x}{192:02x}{0:02x}',f'#{240:02x}{224:02x}{0:02x}',f'#{160:02x}{128:02x}{0:02x}']},
-            "grey_2ridge"    : {"CODES":{"static":"53"},"COLORS":[f'#{176:02x}{176:02x}{208:02x}',f'#{192:02x}{192:02x}{224:02x}',f'#{112:02x}{112:02x}{144:02x}']}
+            "clear"          : blocks.Clear(),
+            "white_flat"     : blocks.White_Flat_AROD(),
+            "red_flat"       : blocks.Red_Flat_AROD(),
+            "pink_flat"      : blocks.Pink_Flat_AROD(),
+            "orange_flat"    : blocks.Orange_Flat_AROD(),
+            "yellow_flat"    : blocks.Yellow_Flat_AROD(),
+            "green_flat"     : blocks.Green_Flat_AROD(),
+            "turqouise_flat" : blocks.Turqouise_Flat_AROD(),
+            "blue_flat"      : blocks.Blue_Flat_AROD(),
+            "grey_1ridge"    : blocks.Grey_1Ridge_AROD(),
+            "gold_1ridge"    : blocks.Gold_1Ridge_AROD(),
+            "grey_2ridge"    : blocks.Grey_2Ridge_AROD()
         },
         "LEVELS":{
             "1":0x593E,"2R":0x6676,"2L":0x68AA,"3R":0x5C8C,"3L":0x5DA6,
@@ -93,14 +96,14 @@ GAME_DATA = {
 }
 
 # ----- Header
-frmHeader= tk.Frame(window,height=20)
-frmControls  = tk.Frame(window)
-frmPaddingLeft= tk.Frame(window,width=20)
-frmPaddingRight= tk.Frame(window,width=20)
-frmDisplay   = tk.Frame(window)
+frmHeader       = tk.Frame(window,height=20)
+frmControls     = tk.Frame(window)
+frmPaddingLeft  = tk.Frame(window,width=20)
+frmPaddingRight = tk.Frame(window,width=20)
+frmDisplay      = tk.Frame(window)
 
 # - Canvas
-cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(26*13),height=(18*16))
+cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
 cnvDisplay.pack()
 # - Game Select Control
 lblGameSelect = tk.Label(frmControls,text="Game:")
@@ -145,20 +148,14 @@ frmPaddingRight.grid(row=1,column=2)
 frmControls.grid(row=2,column=1)
 # ---------- Event Handling
 def leftMouseEvent(event):
-    #TODO -- add in constants based on game
-    blockRow=math.ceil(event.y / 16)-1
-    blockCol=math.ceil(event.x / 26)-1
-    print("clicked Row: " +str(blockRow)+" Col: "+str(blockCol))
-    setBrickData(blockRow,blockCol,strCurrentBlock.get())
-cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
+    coords= blocks.findBlockColRow(event.x,event.y)
+    print("clicked Row: " +str(coords["row"])+" Col: "+str(coords["col"]))
+    setBrickData(coords["row"],coords["col"],strCurrentBlock.get())
 # --
 def rightMouseEvent(event):
-    #TODO -- add in constants based on game
-    blockRow=math.ceil(event.y / 16)-1
-    blockCol=math.ceil(event.x / 26)-1
-    print("erased Row: " +str(blockRow)+" Col: "+str(blockCol))
-    setBrickData(blockRow,blockCol,"clear")
-cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
+    coords= blocks.findBlockColRow(event.x,event.y)
+    print("erased Row: " +str(coords["row"])+" Col: "+str(coords["col"]))
+    setBrickData(coords["row"],coords["col"],"clear")
 # ---------- Methods
 def saveData():
     global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
@@ -186,8 +183,7 @@ def saveData():
                 if GAME_DATA[strCurrentGame.get()]["DIRECTION"] == "rightleft":
                     cellIdx=(cellRow*maxCols)+(maxCols-cellCol)-1 # Because taito wanted to throw off hackers?
                 #try:
-                code = GAME_DATA[strCurrentGame.get()]["BLOCKS"][lstBrickData[cellIdx]]["CODES"]["static"]
-                romCode=bytes.fromhex(code)
+                romCode=GAME_DATA[strCurrentGame.get()]["BLOCKS"][lstBrickData[cellIdx]].getCode_Static()
                 content+=romCode
                 #except:
                 #    print("Col: %d Row %d generated Index: %d" % (cellCol,cellRow,cellIdx))
@@ -214,54 +210,23 @@ def initBrickData():
     if len(lstBrickData) > 0:
         lstBrickData=[]
     for row in range(GAME_DATA[strCurrentGame.get()]["ROWS"]):
-        for col in range(GAME_DATA[strCurrentGame.get()]["COLS"]):  
+        for col in range(GAME_DATA[strCurrentGame.get()]["COLS"]):
             lstBrickData.append("clear")
 
 def drawBricks():
-    global lstBrickData
+    global lstBrickData,cnvDisplay
     #TODO -- constants
     for row in range(GAME_DATA[strCurrentGame.get()]["ROWS"]):
         for col in range(GAME_DATA[strCurrentGame.get()]["COLS"]):
-            oX=col*26
-            oY=row*16
-            color = lstBrickData[(row*GAME_DATA[strCurrentGame.get()]["COLS"])+col]
-            base  = GAME_DATA[strCurrentGame.get()]["BLOCKS"][color]["COLORS"][0]
-            if("1ridge" in color):
-                highlight =GAME_DATA[strCurrentGame.get()]["BLOCKS"][color]["COLORS"][1]
-                shadow    =GAME_DATA[strCurrentGame.get()]["BLOCKS"][color]["COLORS"][2]
-                cnvDisplay.create_rectangle(oX,oY,oX+26,oY+16,outline="#000", fill="#000")
-                cnvDisplay.create_rectangle(oX,oY,oX+24,oY+14,outline="#000", fill=base)
-                cnvDisplay.create_polygon(oX,oY,oX+6,oY+7,oX,oY+14,
-                    outline=highlight, fill=highlight)
-                cnvDisplay.create_polygon(oX+23,oY,oX+17,oY+7,oX+23,oY+13,
-                    outline=shadow, fill=shadow)
-            elif("2ridge" in color):
-                highlight =GAME_DATA[strCurrentGame.get()]["BLOCKS"][color]["COLORS"][1]
-                shadow    =GAME_DATA[strCurrentGame.get()]["BLOCKS"][color]["COLORS"][2]
-                cnvDisplay.create_rectangle(oX,oY,oX+26,oY+16,outline="#000", fill="#000")
-                cnvDisplay.create_rectangle(oX,oY,oX+24,oY+14,outline="#000", fill=base)
-                min=4
-                rng=6
-                max=min+rng
-                mid=min+(rng/2)
-                cnvDisplay.create_polygon(oX+min,oY+max,oX+max,oY+max,oX+mid,oY+mid,
-                    outline=highlight, fill=highlight)
-                cnvDisplay.create_polygon(oX+max,oY+max,oX+max,oY+min,oX+mid,oY+mid,
-                    outline=shadow, fill=shadow)
-                offset=(rng+4)
-                cnvDisplay.create_polygon(oX+min+offset,oY+max,oX+max+offset,oY+max,oX+mid+offset,oY+mid,
-                    outline=highlight, fill=highlight)
-                cnvDisplay.create_polygon(oX+max+offset,oY+max,oX+max+offset,oY+min,oX+mid+offset,oY+mid,
-                    outline=shadow, fill=shadow)
-            elif("flat" in color):
-                cnvDisplay.create_rectangle(oX,oY,oX+26,oY+16,outline="#000", fill="#000")
-                cnvDisplay.create_rectangle(oX,oY,oX+24,oY+14,outline="#000", fill=base)
-            else:
-                cnvDisplay.create_rectangle(oX,oY,oX+26,oY+16,outline="#000", fill=base)
+            colorIdx = lstBrickData[(row*GAME_DATA[strCurrentGame.get()]["COLS"])+col]
+            GAME_DATA[strCurrentGame.get()]["BLOCKS"][colorIdx].draw(cnvDisplay,row,col)
 
 # ---------- Main
 if __name__ == '__main__':
     # have to set these AFTER we initalize
+    cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
+    cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
+
     initBrickData()
     drawBricks()
     btnSave.configure(command=saveData)
