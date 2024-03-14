@@ -9,14 +9,10 @@ import math
 from os import path
 import tkinter as tk
 # ---------- TODOS
-# TODO: Add controls for font selection and size
-# TODO: Add control for selecting an input file other than example.txt
-# TODO: As part of the programmatic pre-compiled scripts it'd be REALLY nice to give a "translucent" character
-#       to ease headaches in building programmatic code
-# TODO: Investigate adding sound?
-# TODO: This ux is ugly as hell
+#TODO: Classes and making this less...rigid.
+#TODO: Revenge of DOH has movable blocks. lets add a radio button for those
 
-# Have to put this here because of blnRunLoop
+
 window = tk.Tk()
 window.geometry("391x600")
 window.title("Artanoid")
@@ -77,7 +73,16 @@ GAME_DATA = {
         },
         "LEVELS":{
             "1":0x593E,"2R":0x6676,"2L":0x68AA,"3R":0x5C8C,"3L":0x5DA6,
-            "4R":0x620E,"4L":0x9D8A,"5R":0x93A0,"5L":0x6328,"6R":0x9C70,"6L":0x6E2C
+            "4R":0x620E,"4L":0x9D8A,"5R":0x93A0,"5L":0x6328,"6R":0x9C70,"6L":0x6E2C,
+            "7R":0x7060,"7L":0x5EC0,"8R":0x5A58,"8L":0x6328,"9R":0x6F46,"9L":0x6CD2,
+            "10R":0x60F4,"10L":0x5FDA,"11R":0x7EB2,"11L":0x8782,"12R":0x7816,"12L":0x96EE,
+            "13R":0x8200,"13L":0x9922,"14R":0x9286,"14L":0x8434,"15R":0x94BA,"15L":0x7930,
+            "16R":0x69C4,"16L":0x6ADE,"18R":0x7C7E,"18L":0x7B64,"19R":0x89B6,"19L":0x8668,
+            "20R":0x7294,"20L":0x831A,"21R":0x6D12,"21L":0x8D04,"22R":0x8F38,"22L":0x6442,
+            "23R":0x7FCC,"23L":0x5B72,"24R":0x73AE,"24L":0x889C,"25R":0x9B56,"25L":0x76FC,
+            "26R":0x95D4,"26L":0x655C,"27R":0x8E1E,"27L":0x7D98,"28R":0x8AD0,"28L":0x75E2,
+            "29R":0x74C8,"29L":0x916C,"30R":0x854E,"30L":0x9A3C,"31R":0x80E6,"31L":0x9052,
+            "32R":0x9808,"32L":0x8BEA,"33R":0x717A,"33L":0x6790
         }
     }
 }
