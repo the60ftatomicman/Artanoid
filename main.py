@@ -11,8 +11,9 @@ import tkinter as tk
 # ---------- TODOS
 #TODO: Classes and making this less...rigid.
 #TODO: Revenge of DOH has movable blocks. lets add a radio button for those
-
-
+#TODO: Handle writing across the 2 memory banks for the OG arkanoid. < 8000 gets ic17 otherwise use ic16.
+#0x0000-0x7FFF	32768	a75-19.ic17	CRC(d3ad37d7) (Fluke: 4189)
+#0x8000-0xFFFF	32768	a75-18.ic16	CRC(cdc08301) (Fluke: E951)
 window = tk.Tk()
 window.geometry("391x600")
 window.title("Artanoid")
@@ -29,20 +30,21 @@ GAME_DATA = {
     "arkanoid":{
         "ROWS":18,
         "COLS":13,
+        "DIRECTION":"leftright",
         "ROM":"",
-        "CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
+        "CHECKSUM":{"location":None,"override":None},
         "BLOCKS":{
             "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
             "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{255:02x}{255:02x}{255:02x}']},
-            "red_flat"       : {"CODES":{"static":"21"},"COLORS":[f'#{255:02x}{0:02x}{0:02x}']},
-            "pink_flat"      : {"CODES":{"static":"31"},"COLORS":[f'#{255:02x}{0:02x}{255:02x}']},
-            "orange_flat"    : {"CODES":{"static":"09"},"COLORS":[f'#{255:02x}{143:02x}{0:02x}']},
-            "yellow_flat"    : {"CODES":{"static":"39"},"COLORS":[f'#{255:02x}{255:02x}{0:02x}']},
-            "green_flat"     : {"CODES":{"static":"19"},"COLORS":[f'#{0:02x}{255:02x}{0:02x}']},
-            "turqouise_flat" : {"CODES":{"static":"11"},"COLORS":[f'#{0:02x}{255:02x}{255:02x}']},
-            "blue_flat"      : {"CODES":{"static":"29"},"COLORS":[f'#{0:02x}{112:02x}{255:02x}']},
+            "red_flat"       : {"CODES":{"static":"12"},"COLORS":[f'#{255:02x}{0:02x}{0:02x}']},
+            "pink_flat"      : {"CODES":{"static":"19"},"COLORS":[f'#{255:02x}{0:02x}{255:02x}']},
+            "orange_flat"    : {"CODES":{"static":"05"},"COLORS":[f'#{255:02x}{143:02x}{0:02x}']},
+            "yellow_flat"    : {"CODES":{"static":"1D"},"COLORS":[f'#{255:02x}{255:02x}{0:02x}']},
+            "green_flat"     : {"CODES":{"static":"0E"},"COLORS":[f'#{0:02x}{255:02x}{0:02x}']},
+            "turqouise_flat" : {"CODES":{"static":"0A"},"COLORS":[f'#{0:02x}{255:02x}{255:02x}']},
+            "blue_flat"      : {"CODES":{"static":"16"},"COLORS":[f'#{0:02x}{112:02x}{255:02x}']},
             "grey_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{157:02x}{157:02x}{157:02x}']},
-            "gold_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{188:02x}{174:02x}{0:02x}']}
+            "gold_flat"      : {"CODES":{"static":"FF"},"COLORS":[f'#{188:02x}{174:02x}{0:02x}']}
         },
         "LEVELS":{
             "1":0xBF15,"2":0x0138,"3":0xBE2B,"4":0x04CB,"5":0x0FE0,
@@ -57,6 +59,7 @@ GAME_DATA = {
     "arkanoidrevengeofdoh":{
         "ROWS":18,
         "COLS":13,
+        "DIRECTION":"rightleft",
         "ROM":"b08_13.3e",
         "CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
         "BLOCKS":{
@@ -170,7 +173,7 @@ def saveData():
         lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
         while data:
             data = fr.read(1)
-            if idx == int(GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"])-1:
+            if GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"] != None and idx == int(GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"])-1:
                 content+=GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["override"]
             elif idx >= lvlStart and idx < lvlStart+(GAME_DATA[strCurrentGame.get()]["COLS"] * GAME_DATA[strCurrentGame.get()]["ROWS"]):
                 offset=(idx-lvlStart)
@@ -179,7 +182,9 @@ def saveData():
                 if cellRow < 0:
                     cellRow = 0
                 cellCol=math.ceil(offset%maxCols)
-                cellIdx=(cellRow*maxCols)+(maxCols-cellCol)-1
+                cellIdx=(cellRow*maxCols)+(cellCol)-1 # Left right by default
+                if GAME_DATA[strCurrentGame.get()]["DIRECTION"] == "rightleft":
+                    cellIdx=(cellRow*maxCols)+(maxCols-cellCol)-1 # Because taito wanted to throw off hackers?
                 #try:
                 code = GAME_DATA[strCurrentGame.get()]["BLOCKS"][lstBrickData[cellIdx]]["CODES"]["static"]
                 romCode=bytes.fromhex(code)
