@@ -6,14 +6,15 @@ Arkanoid and Arkanoid Revenge of Doh Editor
 If provided the proper ROM file, this tool will generate new ROM files to overwrite the existing ROMS for either of these games.
 Block data will be applied AS WELL AS the necessary hacks to jump past ROM checks which are necessary to play any modifications to these games in MAME or on a real machine.
 In short, you draw with the tool. The tool writes all the annoying hex values where they need to go for the block data AND rom checks.
+Note: I am testing against the ROMSTAR Arkanoid and WORLD copy of Revenge of Doh
 
-# Requirements (as of 3/13/2024)
+# Requirements (as of 3/14/2024)
 * Runs on **Python 3.10.11***
   * Uses **tkinter** library as the UI ```pip install tk```
 * You'll need a ROM copy of Arkanoid and Arkanoid: Revenge of Doh (World Edition)
   * Both are not needed! Just the ones necessary for the game you want to edit.
 ----
-# Setup (as of 3/13/2024)
+# Setup (as of 3/14/2024)
 ## Preparing your MAME folder
 1) Start by **backing up** then **unzip** the arkanoid roms into the ROM directory for your MAME emulator
 2) **Rename the backup ZIP roms**, otherwise you will not be saving changes!
@@ -21,8 +22,16 @@ In short, you draw with the tool. The tool writes all the annoying hex values wh
 ## Preparing this python application
 1) In the root of this project, create a folder called **data**
 2) From the roms folder you copied in "Preparing your MAME folder", copy the following ROM files into the newly created **data** folder on your root:
-**Arkanoid Revenge of Doh:** -> copy b08_13.3e 
-**Arkanoid:** -> copy ????? (working on it ok!)
+**Arkanoid Revenge of Doh:** -> copy *b08_13.3e* under a directory called "arkanoidrevengeofdoh"
+**Arkanoid:** -> copy *a75-18.ic16* and copy *a75-19.ic17* under a directory called "arkanoid"
+It should look like
+Root
+ |- arkanoid 
+ |    |-> a75-18.ic16
+ |    |-> a75-19.ic17
+ |- arkanoidrevengeofdoh
+         |-> b08_13.3e
+
 
 ## Running the application
 1) Start with whatever flavor of tool you want to use to start a python app. I use **VSCode** since im also developing it
@@ -46,7 +55,7 @@ In short, you draw with the tool. The tool writes all the annoying hex values wh
 * ~~ ~~Add better instructions in application~~ ~~ (3/13/2024)
 * ~~ ~~Add level select (currently just modifies level 1)~~ ~~ (3/13/2024)
 * ~~ ~~Finish mapping and Add locations for Arkanoid 1~~ ~~ (3/13/2024)
-* Finish and add instructions filewise for Arkanoid 1
+* ~~ ~~Finish and add instructions filewise for Arkanoid 1~~ ~~
 * Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations
 * Add load from ROM
 * Add Save to String -- for sharing!
