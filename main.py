@@ -30,16 +30,17 @@ GAME_DATA = {
         "ROWS":18,
         "COLS":13,
         "ROM":"",
+        "CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
         "BLOCKS":{
             "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
-            "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{242:02x}{242:02x}{242:02x}']},
-            "red_flat"       : {"CODES":{"static":"21"},"COLORS":[f'#{242:02x}{0:02x}{0:02x}']},
-            "pink_flat"      : {"CODES":{"static":"31"},"COLORS":[f'#{242:02x}{80:02x}{226:02x}']},
-            "orange_flat"    : {"CODES":{"static":"09"},"COLORS":[f'#{242:02x}{145:02x}{0:02x}']},
-            "yellow_flat"    : {"CODES":{"static":"39"},"COLORS":[f'#{242:02x}{242:02x}{0:02x}']},
-            "green_flat"     : {"CODES":{"static":"19"},"COLORS":[f'#{0:02x}{242:02x}{0:02x}']},
-            "turqouise_flat" : {"CODES":{"static":"11"},"COLORS":[f'#{0:02x}{242:02x}{242:02x}']},
-            "blue_flat"      : {"CODES":{"static":"29"},"COLORS":[f'#{0:02x}{144:02x}{242:02x}']},
+            "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{255:02x}{255:02x}{255:02x}']},
+            "red_flat"       : {"CODES":{"static":"21"},"COLORS":[f'#{255:02x}{0:02x}{0:02x}']},
+            "pink_flat"      : {"CODES":{"static":"31"},"COLORS":[f'#{255:02x}{0:02x}{255:02x}']},
+            "orange_flat"    : {"CODES":{"static":"09"},"COLORS":[f'#{255:02x}{143:02x}{0:02x}']},
+            "yellow_flat"    : {"CODES":{"static":"39"},"COLORS":[f'#{255:02x}{255:02x}{0:02x}']},
+            "green_flat"     : {"CODES":{"static":"19"},"COLORS":[f'#{0:02x}{255:02x}{0:02x}']},
+            "turqouise_flat" : {"CODES":{"static":"11"},"COLORS":[f'#{0:02x}{255:02x}{255:02x}']},
+            "blue_flat"      : {"CODES":{"static":"29"},"COLORS":[f'#{0:02x}{112:02x}{255:02x}']},
             "grey_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{157:02x}{157:02x}{157:02x}']},
             "gold_flat"      : {"CODES":{"static":"03"},"COLORS":[f'#{188:02x}{174:02x}{0:02x}']}
         },
@@ -57,6 +58,7 @@ GAME_DATA = {
         "ROWS":18,
         "COLS":13,
         "ROM":"b08_13.3e",
+        "CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
         "BLOCKS":{
             "clear"          : {"CODES":{"static":"00"},"COLORS":["#AAA"]},
             "white_flat"     : {"CODES":{"static":"01"},"COLORS":[f'#{242:02x}{242:02x}{242:02x}']},
@@ -168,11 +170,9 @@ def saveData():
         lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
         while data:
             data = fr.read(1)
-            if idx == int(0x0A99)-1:
-                content+=b'\xAF'
+            if idx == int(GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"])-1:
+                content+=GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["override"]
             elif idx >= lvlStart and idx < lvlStart+(GAME_DATA[strCurrentGame.get()]["COLS"] * GAME_DATA[strCurrentGame.get()]["ROWS"]):
-                #QuickHotfix
-                #if idx != lvlStart+13:
                 offset=(idx-lvlStart)
                 maxCols=GAME_DATA[strCurrentGame.get()]["COLS"]
                 cellRow=math.ceil(offset/maxCols)-1
