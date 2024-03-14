@@ -55,7 +55,7 @@ Root
 * ~~ ~~Add better instructions in application~~ ~~ (3/13/2024)
 * ~~ ~~Add level select (currently just modifies level 1)~~ ~~ (3/13/2024)
 * ~~ ~~Finish mapping and Add locations for Arkanoid 1~~ ~~ (3/13/2024)
-* ~~ ~~Finish and add instructions filewise for Arkanoid 1~~ ~~
+* ~~ ~~Finish and add instructions filewise for Arkanoid 1~~ ~~ (3/14/2024)
 * Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations
 * Add load from ROM
 * Add Save to String -- for sharing!
