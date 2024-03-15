@@ -186,26 +186,28 @@ def saveDataArkanoid():
         data = fr.read(1)
         content=data
         idx=0
+        row=-1
+        col=-1
         while data:
             data = fr.read(1)
             idx+=1
             checksumData = dataHandler.checkIfChecksum(idx,data)
             if checksumData != data:
                 content+=checksumData
+            # TODO -- this is shifted in the dumbest way and I cannot figure it out.
             elif idx >= lvlStart and idx < lvlEnd:
-                offset=(idx-lvlStart)
-                cellRow=math.ceil(offset/maxCols)-1
-                if cellRow < 0:
-                    cellRow = 0
-                cellCol=math.ceil(offset%maxCols)
-                cellIdx=(cellRow*maxCols)+(cellCol)-1 # Left right by default
+                offset  = (idx-lvlStart)
+                cellRow = math.floor(offset/maxCols)
+                cellCol = math.floor(offset%maxCols)
+                cellIdx = (cellRow*maxCols)+(cellCol)
                 if GAME_DATA[strCurrentGame.get()]["DIRECTION"] == datahandler.BlockWriteDirection.RIGHT_TO_LEFT:
-                    cellIdx=(cellRow*maxCols)+(maxCols-cellCol)-1 # Because taito wanted to throw off hackers?
+                    cellIdx = (cellRow*maxCols)+(maxCols-cellCol)-1 # Because taito wanted to throw off hackers?
+                #print("Mem Idx: %d Cell Idx: %d, Row: %d Col: %d" % (offset,cellIdx,cellRow,cellCol))
                 #try:
                 romCode=GAME_DATA[strCurrentGame.get()]["BLOCKS"][lstBrickData[cellIdx]].getCode_Static()
                 content+=romCode
                 #except:
-                #    print("Col: %d Row %d generated Index: %d" % (cellCol,cellRow,cellIdx))
+                #    print("ERROR!"")
                 #    content+=data
             else:
                 content+=data
