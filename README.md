@@ -49,6 +49,7 @@ Root
 ----
 # Features Working
 * Revenge of Doh you can edit any level (17 and 34 are bosses so they are uneditable) with basic blocks.
+* Arkanoid you can edit any level (except the final as its a boss) with basic blocks.
 
 # TODOS
 * Refactor and make a class or two. Eeesh right?
@@ -56,11 +57,10 @@ Root
 * ~~ ~~Add level select (currently just modifies level 1)~~ ~~ (3/13/2024)
 * ~~ ~~Finish mapping and Add locations for Arkanoid 1~~ ~~ (3/13/2024)
 * ~~ ~~Finish and add instructions filewise for Arkanoid 1~~ ~~ (3/14/2024)
-* Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations
-* Add load from ROM
-* Add Save to String -- for sharing!
-* Add Load from String -- for sharing!
+* ~~ ~~Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations ~~ ~~ (3/14/2024)
 * Add flags for moveable blocks (Revenge of Doh only)
+* Add load from ROM
+* Add Save/Load to String -- for sharing!
 * Research how backgrounds work for both games, can they change?
 * Add MAME launcher in python project? Might be nice....
 

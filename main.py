@@ -11,6 +11,7 @@ from os import path
 import tkinter as tk
 # ----- User Generated Libs
 import blocks
+import datahandler
 # ---------- TODOS
 #TODO: Classes and making this less...rigid.
 #TODO: Revenge of DOH has movable blocks. lets add a radio button for those
@@ -18,13 +19,14 @@ import blocks
 #0x0000-0x7FFF	32768	a75-19.ic17	CRC(d3ad37d7) (Fluke: 4189)
 #0x8000-0xFFFF	32768	a75-18.ic16	CRC(cdc08301) (Fluke: E951)
 # -- to find address simply remove 0x8000 from anything on ic16! (aka anything greater than 0x8000 for address)
+#TODO: A click menu instead of a drop down (think like paint!)
 window = tk.Tk()
 window.geometry("391x600")
 window.title("Artanoid")
 # ---------- Initialize
-dirRoot        = path.dirname(path.realpath(__file__))
-dirData        = dirRoot+"\\data"
-lvlDataRom     = dirData+"\\arkanoidrevengeofdoh\\b08_13.3e"
+#dirRoot        = path.dirname(path.realpath(__file__))
+#dirData        = dirRoot+"\\data"
+#lvlDataRom     = dirData+"\\arkanoidrevengeofdoh\\b08_13.3e"
 blnSaving      = False
 lstBrickData   = []
 strCurrentGame  = tk.StringVar()
@@ -34,9 +36,10 @@ GAME_DATA = {
     "arkanoid":{
         "ROWS":18,
         "COLS":13,
-        "DIRECTION":"leftright",
-        "ROM":"",
-        "CHECKSUM":{"location":None,"override":None},
+        "DIRECTION":datahandler.BlockWriteDirection.LEFT_TO_RIGHT,
+        #"ROM":"",
+        #"CHECKSUM":{"location":None,"override":None},
+        "DATAHANDLER": datahandler.ROMWriter_Arkanoid(),
         "BLOCKS":{
             "clear"          : blocks.Clear(),
             "white_flat"     : blocks.White_Flat(),
@@ -63,9 +66,10 @@ GAME_DATA = {
     "arkanoidrevengeofdoh":{
         "ROWS":18,
         "COLS":13,
-        "DIRECTION":"rightleft",
-        "ROM":"b08_13.3e",
-        "CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
+        "DIRECTION":datahandler.BlockWriteDirection.RIGHT_TO_LEFT,
+        #"ROM":"b08_13.3e",
+        #"CHECKSUM":{"location":0x0A99,"override":b'\xAF'},
+        "DATAHANDLER": datahandler.ROMWriter_ArkanoidRevengeOfDoh(),
         "BLOCKS":{
             "clear"          : blocks.Clear(),
             "white_flat"     : blocks.White_Flat_AROD(),
@@ -160,59 +164,42 @@ def rightMouseEvent(event):
 # ---------- Methods
 # TODO this is hot garbage and needs to be updated into a handler class
 def saveData():
-    if strCurrentGame.get() == "arkanoidrevengeofdoh":
-        saveDataRevengeOfDoh()
-    elif strCurrentGame.get() == "arkanoid":
-        saveDataArkanoid()
+    #Maybe this doesn't need an update and I can consolidate....
+    global GAME_DATA,strCurrentGame
+    saveDataArkanoid()
         
 def saveDataArkanoid():
     global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
-    content = []
-    lvlDataRom = dirData+"\\"+strCurrentGame.get()+"\\"+GAME_DATA[strCurrentGame.get()]["ROM"]
-    if path.exists(lvlDataRom+".new"):
-        lvlDataRom = lvlDataRom+".new"
-    with open(lvlDataRom, "rb") as fr:
-        data = fr.read(1)
-        content=data
-        idx=0
-        lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
-        while data:
-            data = fr.read(1)
-            content+=data
-            idx+=1
-    print("done reading")
-    if ".new" not in lvlDataRom: 
-        with open(lvlDataRom+".new", "wb") as fw:
-            fw.write(content)
-    else:
-        with open(lvlDataRom, "wb") as fw:
-            fw.write(content)
-    print("done writing")
+    dataHandler = GAME_DATA[strCurrentGame.get()]["DATAHANDLER"]
+    content     = []
+    lvlStart    = GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()]
+    romFilePath = dataHandler.getROMFilePath(lvlStart)
+    #now adjust lvlStart!
+    lvlStart    = dataHandler.adjustROMAddressForLvlStart(lvlStart)
+    lvlStart    = int(lvlStart)
+    lvlEnd      = lvlStart+(GAME_DATA[strCurrentGame.get()]["COLS"] * GAME_DATA[strCurrentGame.get()]["ROWS"])
+    maxCols=GAME_DATA[strCurrentGame.get()]["COLS"]
+    romFilePath = dataHandler.getROMFilePath(lvlStart)
 
-def saveDataRevengeOfDoh():
-    global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
-    content = []
-    lvlDataRom = dirData+"\\"+strCurrentGame.get()+"\\"+GAME_DATA[strCurrentGame.get()]["ROM"]
-    if path.exists(lvlDataRom+".new"):
-        lvlDataRom = lvlDataRom+".new"
-    with open(lvlDataRom, "rb") as fr:
+    print("Reading Rom: %s" % romFilePath)
+    with open(romFilePath, "rb") as fr:
         data = fr.read(1)
         content=data
         idx=0
-        lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
         while data:
             data = fr.read(1)
-            if GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"] != None and idx == int(GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"])-1:
-                content+=GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["override"]
-            elif idx >= lvlStart and idx < lvlStart+(GAME_DATA[strCurrentGame.get()]["COLS"] * GAME_DATA[strCurrentGame.get()]["ROWS"]):
+            idx+=1
+            checksumData = dataHandler.checkIfChecksum(idx,data)
+            if checksumData != data:
+                content+=checksumData
+            elif idx >= lvlStart and idx < lvlEnd:
                 offset=(idx-lvlStart)
-                maxCols=GAME_DATA[strCurrentGame.get()]["COLS"]
                 cellRow=math.ceil(offset/maxCols)-1
                 if cellRow < 0:
                     cellRow = 0
                 cellCol=math.ceil(offset%maxCols)
                 cellIdx=(cellRow*maxCols)+(cellCol)-1 # Left right by default
-                if GAME_DATA[strCurrentGame.get()]["DIRECTION"] == "rightleft":
+                if GAME_DATA[strCurrentGame.get()]["DIRECTION"] == datahandler.BlockWriteDirection.RIGHT_TO_LEFT:
                     cellIdx=(cellRow*maxCols)+(maxCols-cellCol)-1 # Because taito wanted to throw off hackers?
                 #try:
                 romCode=GAME_DATA[strCurrentGame.get()]["BLOCKS"][lstBrickData[cellIdx]].getCode_Static()
@@ -222,16 +209,62 @@ def saveDataRevengeOfDoh():
                 #    content+=data
             else:
                 content+=data
-            idx+=1
-    print("done reading")
-    if ".new" not in lvlDataRom: 
-        with open(lvlDataRom+".new", "wb") as fw:
+
+    print("Done Reading Rom")
+    print("Writing Rom: %s" % romFilePath)
+    if ".new" not in romFilePath: 
+        with open(romFilePath+".new", "wb") as fw:
             fw.write(content)
     else:
-        with open(lvlDataRom, "wb") as fw:
-            fw.write(content)
-    print("done writing")
-   
+         with open(romFilePath, "wb") as fw:
+             fw.write(content)
+    print("Done Writing Rom")
+
+#IM NOT READY TO QUIT YOU!!!
+#def saveDataRevengeOfDoh():
+#    global GAME_DATA,strCurrentGame,strCurrentLevel,lstBrickData
+#    content = []
+#    lvlDataRom = dirData+"\\"+strCurrentGame.get()+"\\"+GAME_DATA[strCurrentGame.get()]["ROM"]
+#    if path.exists(lvlDataRom+".new"):
+#        lvlDataRom = lvlDataRom+".new"
+#    with open(lvlDataRom, "rb") as fr:
+#        data = fr.read(1)
+#        content=data
+#        idx=0
+#        lvlStart=int(GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()])-1
+#        while data:
+#            data = fr.read(1)
+#            if GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"] != None and idx == int(GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["location"])-1:
+#                content+=GAME_DATA[strCurrentGame.get()]["CHECKSUM"]["override"]
+#            elif idx >= lvlStart and idx < lvlStart+(GAME_DATA[strCurrentGame.get()]["COLS"] * GAME_DATA[strCurrentGame.get()]["ROWS"]):
+#                offset=(idx-lvlStart)
+#                maxCols=GAME_DATA[strCurrentGame.get()]["COLS"]
+#                cellRow=math.ceil(offset/maxCols)-1
+#                if cellRow < 0:
+#                    cellRow = 0
+#                cellCol=math.ceil(offset%maxCols)
+#                cellIdx=(cellRow*maxCols)+(cellCol)-1 # Left right by default
+#                if GAME_DATA[strCurrentGame.get()]["DIRECTION"] == "rightleft":
+#                    cellIdx=(cellRow*maxCols)+(maxCols-cellCol)-1 # Because taito wanted to throw off hackers?
+#                #try:
+#                romCode=GAME_DATA[strCurrentGame.get()]["BLOCKS"][lstBrickData[cellIdx]].getCode_Static()
+#                content+=romCode
+#                #except:
+#                #    print("Col: %d Row %d generated Index: %d" % (cellCol,cellRow,cellIdx))
+#                #    content+=data
+#            else:
+#                content+=data
+#            idx+=1
+#    print("done reading")
+#    if ".new" not in lvlDataRom: 
+#        with open(lvlDataRom+".new", "wb") as fw:
+#            fw.write(content)
+#    else:
+#        with open(lvlDataRom, "wb") as fw:
+#            fw.write(content)
+#    print("done writing")
+
+
 def setBrickData(row,col,color):
     global lstBrickData
     lstBrickData[(row*GAME_DATA[strCurrentGame.get()]["COLS"])+col] = color
