@@ -63,7 +63,10 @@ txtBlockSelect = tk.Spinbox(frmControls,textvariable=strCurrentBlock,values=temp
 txtBlockSelect.grid(row=1, column=1)
 # - Save Button
 btnSave = tk.Button(frmControls, text='Save')
-btnSave.grid(row=1, column=2,columnspan=2)
+btnSave.grid(row=1, column=2)
+# - Clear Button
+btnClear = tk.Button(frmControls, text='Clear')
+btnClear.grid(row=1, column=3)
 #-- Instructions
 lblInstructions = tk.Label(frmControls,text="Left click places block. Right click removes blocks")
 lblInstructions.grid(row=3, column=0,columnspan=4)
@@ -112,7 +115,11 @@ def saveData():
     rows     =  datahandler.GAME_DATA[strCurrentGame.get()]["ROWS"]
     cols     =  datahandler.GAME_DATA[strCurrentGame.get()]["COLS"]
     datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].save(lvlStart,rows,cols,lstBrickData)
-        
+
+def clearBoard():
+    initBrickData()
+    drawBricks()
+
 def setBrickData(row,col,color):
     global lstBrickData
     lstBrickData[(row*datahandler.GAME_DATA[strCurrentGame.get()]["COLS"])+col] = color
@@ -175,10 +182,9 @@ def drawSwathes():
 # ---------- Main
 if __name__ == '__main__':
     # have to set these AFTER we initalize
-
-    cnvSwathes.bind("<ButtonPress 1>", selectSwathEvent)
     txtGameSelect.configure(command=refreshKeys)
     btnSave.configure(command=saveData)
+    btnClear.configure(command=clearBoard)
 
     initBrickData()
     drawBricks()
