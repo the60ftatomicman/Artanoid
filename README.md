@@ -1,6 +1,6 @@
 # Artanoid
 Arkanoid and Arkanoid Revenge of Doh Editor
-![Screenshot from editing level 1](./imgs/readme/artanoid.png)
+![Screenshot from editing](./imgs/readme/v1.0.0.png)
 
 # What does this do
 If provided the proper ROM file, this tool will generate new ROM files to overwrite the existing ROMS for either of these games.

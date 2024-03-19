@@ -64,7 +64,6 @@ class ROMWriter:
         lvlStart    = self.adjustROMAddressForLvlStart(lvlStart)
         lvlStart    = int(lvlStart)
         lvlEnd      = lvlStart+(cols * rows)
-        romFilePath = self.getROMFilePath(lvlStart)
 
         print("Reading Rom: %s" % romFilePath)
         with open(romFilePath, "rb") as fr:
@@ -112,7 +111,7 @@ class ROMWriter:
 class ROMWriter_Arkanoid(ROMWriter):
     def __init__(self):
         super().__init__("arkanoid",
-        ["a75-18.ic16","a75-19.ic17"],
+        ["a75-19.ic17","a75-18.ic16"],
         [0x0000,0x8000],{},
         BlockWriteDirection.LEFT_TO_RIGHT,
         {
