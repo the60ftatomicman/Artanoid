@@ -119,7 +119,12 @@ def setBrickData(row,col,color):
     drawBricks()
 
 def initBrickData():
-    global lstBrickData
+    global lstBrickData,cnvDisplay
+    cnvDisplay.destroy()
+    cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
+    cnvDisplay.pack()
+    cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
+    cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
     if len(lstBrickData) > 0:
         lstBrickData=[]
     for row in range(datahandler.GAME_DATA[strCurrentGame.get()]["ROWS"]):
@@ -127,19 +132,35 @@ def initBrickData():
             lstBrickData.append("clear")
 
 def drawBricks():
+    # the reinitlize canvas is a hack for performance -_- tkinter is VERY slow and creates
+    # children with each shape (MY BAD!)
+    # ill fix it another time. maybe we can make the children more dynamic a'la the blocks!
     global lstBrickData,cnvDisplay
-    #TODO -- constants
+    cnvDisplay.destroy()
+    cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
+    cnvDisplay.pack()
+    cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
+    cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
     for row in range(datahandler.GAME_DATA[strCurrentGame.get()]["ROWS"]):
         for col in range(datahandler.GAME_DATA[strCurrentGame.get()]["COLS"]):
             colorIdx = lstBrickData[(row*datahandler.GAME_DATA[strCurrentGame.get()]["COLS"])+col]
             datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].blockset[colorIdx].draw(cnvDisplay,row,col)
 
 def initSwathData():
+    global lstSwathData,cnvSwathes
+    cnvSwathes.destroy()
+    cnvSwathes = tk.Canvas(frmHeader,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
+    cnvSwathes.pack()
+    cnvSwathes.bind("<ButtonPress 1>", selectSwathEvent)
     for swath in range(12):
         lstSwathData.append("clear")
 
 def drawSwathes():
     global lstSwathData,cnvSwathes
+    cnvSwathes.destroy()
+    cnvSwathes = tk.Canvas(frmHeader,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
+    cnvSwathes.pack()
+    cnvSwathes.bind("<ButtonPress 1>", selectSwathEvent)
     swathIdx = -1
     for swath in datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].blockset:
         if swath != "clear":
@@ -154,8 +175,7 @@ def drawSwathes():
 # ---------- Main
 if __name__ == '__main__':
     # have to set these AFTER we initalize
-    cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
-    cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
+
     cnvSwathes.bind("<ButtonPress 1>", selectSwathEvent)
     txtGameSelect.configure(command=refreshKeys)
     btnSave.configure(command=saveData)
