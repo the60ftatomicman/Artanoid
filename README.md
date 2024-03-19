@@ -58,6 +58,7 @@ Root
 * ~~Finish mapping and Add locations for Arkanoid 1~~ (3/13/2024)
 * ~~Finish and add instructions filewise for Arkanoid 1~~ (3/14/2024)
 * ~~Add "Useful Lua Scripts" folder so anyone who wants to help in this effort has the tools to make this NOT a grinding task for fetching all the necessary memory locations~~ (3/14/2024)
+* ~~Add a cool block picker like in paint~~ (3/18/2024)
 * Add flags for moveable blocks (Revenge of Doh only)
 * Add load from ROM
 * Add Save/Load to String -- for sharing!
