@@ -105,6 +105,7 @@ def refreshKeys():
     tempList = list(datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].blockset.keys())
     tempList.remove("clear")
     txtBlockSelect.config(values=tempList)
+    lstBrickData = []
     initBrickData()
     drawBricks()
     initSwathData()

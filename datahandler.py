@@ -157,7 +157,7 @@ class ROMWriter_ArkanoidRevengeOfDoh(ROMWriter):
 #---
 GAME_DATA = {
     "arkanoid":{
-        "ROWS":18,
+        "ROWS":17,
         "COLS":13,
         "DATAHANDLER": ROMWriter_Arkanoid(),
         "LEVELS":{
