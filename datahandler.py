@@ -5,6 +5,7 @@
 from enum import Enum
 from math import floor
 from os import path
+import csv
 # ----- External Libs
 # ----- User Generated Libs
 import blocks
@@ -57,7 +58,7 @@ class ROMWriter:
                 return self.checksums[writeMemoryLocation]
         return currentData
 
-    def save(self,lvlStart,rows,cols,lstBrickData):
+    def export(self,lvlStart,rows,cols,lstBrickData):
         content     = []
         romFilePath = self.getROMFilePath(lvlStart)
         #now adjust lvlStart!
@@ -103,6 +104,23 @@ class ROMWriter:
             with open(romFilePath, "wb") as fw:
                 fw.write(content)
         print("Done Writing Rom")
+
+    def save(self,lstBrickData):
+        content = ""
+        for brick in lstBrickData:
+            content += brick+","+str(self.blockset[brick].getCode_Static())+"\r\n"
+        with open(dirData+"\\"+self.game+"\\save.csv", "w") as fw:
+                fw.write(content)
+
+    def load(self):
+        content = []
+        with open(dirData+"\\"+self.game+"\\save.csv", "r") as fr:
+            reader = csv.reader(fr)
+            for row in reader:
+                #TODO -- this is an issue where save double spaces its saves. this overwrites it
+                if len(row) == 2:
+                    content.append(row[0])
+        return content
 #---
 #
 # Inherited Classes

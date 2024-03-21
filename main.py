@@ -67,18 +67,29 @@ tempList = list(datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].block
 tempList.remove("clear")
 txtBlockSelect = tk.Spinbox(frmControls,textvariable=strCurrentBlock,values=tempList,state='readonly')
 txtBlockSelect.grid(row=1, column=1)
+block_btn_frame = tk.Frame(frmControls)
+block_btn_frame.grid(row=1, column=2,columnspan=3,sticky="W")
+lblActions = tk.Label(block_btn_frame,text="Actions:")
+lblActions.grid(row=0, column=1)
+btnClear = tk.Button(block_btn_frame, text='Clear')
+btnClear.grid(row=0, column=2)
+btnFill = tk.Button(block_btn_frame, text='Fill All')
+btnFill.grid(row=0, column=3)
 #-- OS Operations
 os_btn_frame = tk.Frame(frmControls)
-os_btn_frame.grid(row=1, column=2,columnspan=3)
+os_btn_frame.grid(row=2, column=0,columnspan=5,sticky="W")
 lblOs = tk.Label(os_btn_frame,text="Options:")
 lblOs.grid(row=1, column=0)
 btnSave = tk.Button(os_btn_frame, text='Save')
 btnSave.grid(row=1, column=1)
-btnClear = tk.Button(os_btn_frame, text='Clear')
-btnClear.grid(row=1, column=2)
+btnLoad = tk.Button(os_btn_frame, text='Load')
+btnLoad.grid(row=1, column=2)
+btnExport = tk.Button(os_btn_frame, text='ExportTo Rom')
+btnExport.grid(row=1, column=3)
+
 #-- Shifting
 shift_btn_frame = tk.Frame(frmControls)
-shift_btn_frame.grid(row=2, columnspan=5)
+shift_btn_frame.grid(row=3, column=0,columnspan=5,sticky="W")
 lblShift = tk.Label(shift_btn_frame,text="Shift:")
 lblShift.grid(row=1, column=1)
 btnShiftLeft = tk.Button(shift_btn_frame, text='Left')
@@ -177,12 +188,19 @@ def shiftUp():
 def shiftDown():
     shiftKeys(ShiftDirection.DOWN)
 
-# ---------- Methods
-def saveData():
+def exportData():
     lvlStart =  datahandler.GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()]
     rows     =  datahandler.GAME_DATA[strCurrentGame.get()]["ROWS"]
     cols     =  datahandler.GAME_DATA[strCurrentGame.get()]["COLS"]
-    datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].save(lvlStart,rows,cols,lstBrickData)
+    datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].export(lvlStart,rows,cols,lstBrickData)
+# ---------- Methods
+def saveData():
+    global lstBrickData
+    datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].save(lstBrickData)
+def loadData():
+    global lstBrickData
+    lstBrickData = datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].load()
+    drawBricks()
 
 def clearBoard():
     initBrickData()
@@ -191,6 +209,12 @@ def clearBoard():
 def setBrickData(row,col,color):
     global lstBrickData
     lstBrickData[(row*datahandler.GAME_DATA[strCurrentGame.get()]["COLS"])+col] = color
+    drawBricks()
+
+def setAllBrickData():
+    global lstBrickData
+    for idx in range(len(lstBrickData)):
+        lstBrickData[idx] = strCurrentBlock.get()
     drawBricks()
 
 def initBrickData():
@@ -251,8 +275,11 @@ def drawSwathes():
 if __name__ == '__main__':
     # have to set these AFTER we initalize
     txtGameSelect.configure(command=refreshKeys)
+    btnExport.configure(command=exportData)
     btnSave.configure(command=saveData)
+    btnLoad.configure(command=loadData)
     btnClear.configure(command=clearBoard)
+    btnFill.configure(command=setAllBrickData)
     btnShiftLeft.configure(command=shiftLeft)
     btnShiftRight.configure(command=shiftRight)
     btnShiftUp.configure(command=shiftUp)
