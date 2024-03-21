@@ -117,7 +117,7 @@ class Block:
 #---
 class Clear(Block):
     def __init__(self):
-        super().__init__("clear",BlockType.CLEAR,["00"],["#AAA"])
+        super().__init__("clear",BlockType.CLEAR,["00"],[RGB2TkinterColor(76,106,78)])
 #-- Arkanoid
 class White_Flat(Block):
     def __init__(self):

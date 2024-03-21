@@ -5,8 +5,8 @@
 # --- https://web.archive.org/web/20150321101604/http://effbot.org/tkinterbook/tkinter-events-and-bindings.htm
 # ---------- Imports
 # ----- Internal Libs
-import math
 from os import path
+from enum import Enum
 # ----- External Libs
 import tkinter as tk
 # ----- User Generated Libs
@@ -16,11 +16,17 @@ import datahandler
 #TODO: Classes for level data
 #TODO: dismantel more of the GAME_DATA object
 #TODO: Revenge of DOH has movable blocks. lets add a radio button for those
-
 window = tk.Tk()
 window.geometry("391x600")
 window.title("Artanoid")
+
 # ---------- Initialize
+class ShiftDirection(Enum):
+    LEFT  = 0
+    RIGHT = 1
+    UP    = 2
+    DOWN  = 3
+
 lstBrickData    = []
 lstSwathData    = []
 strCurrentGame  = tk.StringVar()
@@ -36,9 +42,9 @@ frmPaddingRight = tk.Frame(window,width=20)
 frmDisplay      = tk.Frame(window)
 
 # - Canvas
-cnvSwathes = tk.Canvas(frmHeader,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
+cnvSwathes = tk.Canvas(frmHeader,bg = blocks.Clear().getColor_Base(),width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
 cnvSwathes.pack()
-cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
+cnvDisplay = tk.Canvas(frmDisplay,bg = blocks.Clear().getColor_Base(),width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
 cnvDisplay.pack()
 # - Label for Header
 #lblSwathes = tk.Label(frmHeader,text="Pick a Brick")
@@ -61,15 +67,33 @@ tempList = list(datahandler.GAME_DATA[strCurrentGame.get()]["DATAHANDLER"].block
 tempList.remove("clear")
 txtBlockSelect = tk.Spinbox(frmControls,textvariable=strCurrentBlock,values=tempList,state='readonly')
 txtBlockSelect.grid(row=1, column=1)
-# - Save Button
-btnSave = tk.Button(frmControls, text='Save')
-btnSave.grid(row=1, column=2)
-# - Clear Button
-btnClear = tk.Button(frmControls, text='Clear')
-btnClear.grid(row=1, column=3)
+#-- OS Operations
+os_btn_frame = tk.Frame(frmControls)
+os_btn_frame.grid(row=1, column=2,columnspan=3)
+lblOs = tk.Label(os_btn_frame,text="Options:")
+lblOs.grid(row=1, column=0)
+btnSave = tk.Button(os_btn_frame, text='Save')
+btnSave.grid(row=1, column=1)
+btnClear = tk.Button(os_btn_frame, text='Clear')
+btnClear.grid(row=1, column=2)
+#-- Shifting
+shift_btn_frame = tk.Frame(frmControls)
+shift_btn_frame.grid(row=2, columnspan=5)
+lblShift = tk.Label(shift_btn_frame,text="Shift:")
+lblShift.grid(row=1, column=1)
+btnShiftLeft = tk.Button(shift_btn_frame, text='Left')
+btnShiftLeft.grid(row=1, column=2)
+btnShiftRight = tk.Button(shift_btn_frame, text='Right')
+btnShiftRight.grid(row=1, column=3)
+btnShiftUp = tk.Button(shift_btn_frame, text='Up')
+btnShiftUp.grid(row=1, column=4)
+btnShiftDown = tk.Button(shift_btn_frame, text='Down')
+btnShiftDown.grid(row=1, column=5)
 #-- Instructions
+lblInstructions = tk.Label(frmControls,text="-----")
+lblInstructions.grid(row=4, column=0,columnspan=4)
 lblInstructions = tk.Label(frmControls,text="Left click places block. Right click removes blocks")
-lblInstructions.grid(row=3, column=0,columnspan=4)
+lblInstructions.grid(row=5, column=0,columnspan=4)
 # -- build it all together
 frmHeader.grid(row=0,column=0,columnspan=3)
 frmPaddingLeft.grid(row=1,column=0)
@@ -96,8 +120,6 @@ def selectSwathEvent(event):
     if swath != "clear":
         strCurrentBlock.set(swath)
 
-   
-
 def refreshKeys():
     global txtBlockSelect,txtLevelSelect
     tempList = list(datahandler.GAME_DATA[strCurrentGame.get()]["LEVELS"].keys())
@@ -110,6 +132,51 @@ def refreshKeys():
     drawBricks()
     initSwathData()
     drawSwathes()
+
+def shiftKeys(dir):
+    global lstBrickData
+    if lstBrickData is not None and len(lstBrickData) > 0:
+        if dir == ShiftDirection.LEFT:
+            print("Shift LEFT")
+            firstElm = lstBrickData[0]
+            lstBrickData.pop(0)
+            lstBrickData.append(firstElm)
+            drawBricks()
+        elif dir == ShiftDirection.RIGHT:
+            print("Shift RIGHT")
+            lastElm = lstBrickData[len(lstBrickData) - 1]
+            lstBrickData = lstBrickData[:len(lstBrickData) - 1]
+            lstBrickData.insert(0,lastElm)
+            drawBricks()
+        elif dir == ShiftDirection.UP:
+            print("Shift UP")
+            firstElms = lstBrickData[:datahandler.GAME_DATA[strCurrentGame.get()]["COLS"]]
+            lstBrickData = lstBrickData[datahandler.GAME_DATA[strCurrentGame.get()]["COLS"]:]
+            for elm in firstElms:
+                lstBrickData.append(elm)
+            drawBricks()
+        elif dir == ShiftDirection.DOWN:
+            print("Shift DOWN")
+            lastIdx = len(lstBrickData) - 1
+            colCount = datahandler.GAME_DATA[strCurrentGame.get()]["COLS"]
+            lastElms = lstBrickData[(lastIdx - colCount + 1):]
+            lstBrickData = lstBrickData[:(lastIdx - colCount + 1)]
+            for elmIdx in range(len(lastElms)):
+                elm = lastElms[(len(lastElms)-1)-elmIdx]
+                lstBrickData.insert(0,elm)
+            drawBricks()
+        else: 
+            print("Shift Direction skip")
+
+def shiftLeft():
+    shiftKeys(ShiftDirection.LEFT)
+def shiftRight():
+    shiftKeys(ShiftDirection.RIGHT)
+def shiftUp():
+    shiftKeys(ShiftDirection.UP)
+def shiftDown():
+    shiftKeys(ShiftDirection.DOWN)
+
 # ---------- Methods
 def saveData():
     lvlStart =  datahandler.GAME_DATA[strCurrentGame.get()]["LEVELS"][strCurrentLevel.get()]
@@ -129,7 +196,7 @@ def setBrickData(row,col,color):
 def initBrickData():
     global lstBrickData,cnvDisplay
     cnvDisplay.destroy()
-    cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
+    cnvDisplay = tk.Canvas(frmDisplay,bg = blocks.Clear().getColor_Base(),width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
     cnvDisplay.pack()
     cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
     cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
@@ -145,7 +212,7 @@ def drawBricks():
     # ill fix it another time. maybe we can make the children more dynamic a'la the blocks!
     global lstBrickData,cnvDisplay
     cnvDisplay.destroy()
-    cnvDisplay = tk.Canvas(frmDisplay,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
+    cnvDisplay = tk.Canvas(frmDisplay,bg = blocks.Clear().getColor_Base(),width=(blocks.BLOCK_WIDTHS*13),height=(blocks.BLOCK_HEIGHTS*18))
     cnvDisplay.pack()
     cnvDisplay.bind("<ButtonPress 1>", leftMouseEvent)
     cnvDisplay.bind("<ButtonPress 3>", rightMouseEvent)
@@ -157,7 +224,7 @@ def drawBricks():
 def initSwathData():
     global lstSwathData,cnvSwathes
     cnvSwathes.destroy()
-    cnvSwathes = tk.Canvas(frmHeader,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
+    cnvSwathes = tk.Canvas(frmHeader,bg = blocks.Clear().getColor_Base(),width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
     cnvSwathes.pack()
     cnvSwathes.bind("<ButtonPress 1>", selectSwathEvent)
     for swath in range(12):
@@ -166,7 +233,7 @@ def initSwathData():
 def drawSwathes():
     global lstSwathData,cnvSwathes
     cnvSwathes.destroy()
-    cnvSwathes = tk.Canvas(frmHeader,bg = "#aaa",width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
+    cnvSwathes = tk.Canvas(frmHeader,bg =blocks.Clear().getColor_Base(),width=(blocks.BLOCK_WIDTHS*6),height=(blocks.BLOCK_HEIGHTS*2),highlightthickness=0, relief='sunken')
     cnvSwathes.pack()
     cnvSwathes.bind("<ButtonPress 1>", selectSwathEvent)
     swathIdx = -1
@@ -186,7 +253,10 @@ if __name__ == '__main__':
     txtGameSelect.configure(command=refreshKeys)
     btnSave.configure(command=saveData)
     btnClear.configure(command=clearBoard)
-
+    btnShiftLeft.configure(command=shiftLeft)
+    btnShiftRight.configure(command=shiftRight)
+    btnShiftUp.configure(command=shiftUp)
+    btnShiftDown.configure(command=shiftDown)
     initBrickData()
     drawBricks()
 
