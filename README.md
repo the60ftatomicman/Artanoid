@@ -52,6 +52,7 @@ Root
 * Arkanoid you can edit any level (except the final as its a boss) with basic blocks.
 
 # TODOS
+* OG Arkanoid's piracy protection is if you overwrite a75-19.ic17; it allows you to skip all levels. Need to fix!
 * Refactor and make a class or two. Eeesh right?
 * ~~Add better instructions in application~~ (3/13/2024)
 * ~~Add level select (currently just modifies level 1)~~ (3/13/2024)
@@ -61,7 +62,7 @@ Root
 * ~~Add a cool block picker like in paint~~ (3/18/2024)
 * Add flags for moveable blocks (Revenge of Doh only)
 * Add load from ROM
-* Add Save/Load to String -- for sharing!
+* ~~Add Save/Load to String -- for sharing!~~ (3/21/2024)
 * Research how backgrounds work for both games, can they change?
 * Add MAME launcher in python project? Might be nice....
 
