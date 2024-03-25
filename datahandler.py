@@ -130,7 +130,7 @@ class ROMWriter_Arkanoid(ROMWriter):
     def __init__(self):
         super().__init__("arkanoid",
         ["a75-19.ic17","a75-18.ic16"],
-        [0x0000,0x8000],{},
+        [0x0000,0x8000],{int(0x4EF4):b'\xAF'},
         BlockWriteDirection.LEFT_TO_RIGHT,
         {
             "clear"          : blocks.Clear(),
