@@ -52,7 +52,9 @@ Root
 * Arkanoid you can edit any level (except the final as its a boss) with basic blocks.
 
 # TODOS
-*~~ OG Arkanoid's piracy protection is if you overwrite a75-19.ic17; it allows you to skip all levels. Need to fix!~~ (3/25/2024)
+* OG Arkanoids lvls 8,9,10 leads to no coin insert bug.
+* OG Arkanoids lvl 11 leads to ball through roof bug.
+* ~~ OG Arkanoid's piracy protection is if you overwrite a75-19.ic17; it allows you to skip all levels. Need to fix!~~ (3/25/2024)
 * Refactor and make a class or two. Eeesh right?
 * ~~Add better instructions in application~~ (3/13/2024)
 * ~~Add level select (currently just modifies level 1)~~ (3/13/2024)
